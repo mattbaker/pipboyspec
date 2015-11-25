@@ -28,7 +28,7 @@ A0 00 00 00 03 48 45 4C 4C 4F 57 4F 52 4C 44
 ```
 
 | size(32) | type(8) | content(size) |
-|------------------------------------|
+|----------|---------|---------------|
 | A0000000 | 03      | HELLOWORLD    |
 
 ### Message Types
@@ -43,7 +43,7 @@ e.x.
 ```
 
 | size(32) | type(8) | content(size) |
-|------------------------------------|
+|----------|---------|---------------|
 | 00000000 | 00      |               |
 
 When the App receives a heartbeat, the App must send the same heartbeat (5 bytes of zeros) back to let the Server know that the App is still running. If the App does not respond with a heartbeat, the Server will close the TCP connection.
