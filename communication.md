@@ -1,10 +1,10 @@
 # Communication
 Once Discovery has completed, the App connects to the Server on Port TCP/27000.
 
-Example of connecting to TCP/27000 on a PS4 with IP 192.168.0.101:
+Example of connecting to TCP/27000 on a PS4 with IP 192.168.0.101 with netcat:
 
 ```
-nc 192.168.0.101 27000 #where this IP is the IP address of your PC or PS4
+$ nc 192.168.0.101 27000
 ```
 
 ## Data Stream Format
