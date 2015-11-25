@@ -1,5 +1,5 @@
 # Discovery
-Before data can be sent and received, the App must discover the Server.
+Before data can be sent and received, the App must discover the server.
 
 ### PC & PS4
 

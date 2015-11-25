@@ -1,5 +1,5 @@
 # Communication
-Once Discovery has completed, the App connects to the Server on Port TCP/27000.
+Once Discovery has completed, the app connects to the server on Port TCP/27000.
 
 Example of connecting to TCP/27000 on a PS4 with IP 192.168.0.101 with netcat:
 
@@ -9,7 +9,7 @@ $ nc 192.168.0.101 27000
 
 ## Data Stream Format
 
-Data is streamed via the TCP connection, bi-directionally, between the Server and the App. All data is [little-endian](https://en.wikipedia.org/wiki/Endianness).
+Data is streamed via the TCP connection, bi-directionally, between the server and the app. All data is [little-endian](https://en.wikipedia.org/wiki/Endianness).
 
 The stream is composed of individual Messages of the form:
 
@@ -34,7 +34,7 @@ A0 00 00 00 03 48 45 4C 4C 4F 57 4F 52 4C 44
 ### Message Types
 #### Type 0: Heartbeat
 
-The Server will periodically send a "heartbeat" packet of type 0 and no content. In other words, length 0 and type 0.
+The server will periodically send a "heartbeat" packet of type 0 and no content. In other words, length 0 and type 0.
 
 e.x.
 
@@ -46,13 +46,13 @@ e.x.
 |----------|---------|---------------|
 | 00000000 | 00      |               |
 
-When the App receives a heartbeat, the App must send the same heartbeat (5 bytes of zeros) back to let the Server know that the App is still running. If the App does not respond with a heartbeat, the Server will close the TCP connection.
+When the app receives a heartbeat, the app must send the same heartbeat (5 bytes of zeros) back to let the server know that the app is still running. If the app does not respond with a heartbeat, the server will close the TCP connection.
 
-Heartbeats should be sent by the App only in response to the Server.
+Heartbeats should be sent by the app only in response to the server.
 
 #### Type 1: New Connection
 
-Messages of type 1 are sent when the App first connects to the Server. It contains a JSON string with the language and version of the game.
+Messages of type 1 are sent when the app first connects to the server. It contains a JSON string with the language and version of the game.
 
 ```JSON
 {"lang": "de", "version": "1.1.30.0"}
@@ -60,7 +60,7 @@ Messages of type 1 are sent when the App first connects to the Server. It contai
 
 #### Type 2: Busy
 
-Messages of type 2 are sent when the Server is busy. A Server will be busy if a Pipboy Companion App is already connected. The message contains no data.
+Messages of type 2 are sent when the server is busy. A server will be busy if a Pipboy Companion app is already connected. The message contains no data.
 
 e.x.
 ```
@@ -71,7 +71,7 @@ e.x.
 
 #### Type 4: Local Map Update
 
-Messages of type 4 contain binary image data of the current local map if you view the local map in the App.
+Messages of type 4 contain binary image data of the current local map if you view the local map in the app.
 
 ```
 struct Extend {
@@ -91,7 +91,7 @@ struct Map {
 
 #### Type 5: Command Request
 
-Messages of type 5 are sent by the App to the Server to request an action be taken in the game. The content of the message is a JSON string of the form:
+Messages of type 5 are sent by the app to the server to request an action be taken in the game. The content of the message is a JSON string of the form:
 
 ```JSON
 {"type": 1, "args": [4207600675, 7, 494, [0, 1]], "id": 3}

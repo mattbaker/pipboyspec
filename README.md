@@ -9,11 +9,11 @@ This repository endeavors to provide a full description of the protocol used by 
 
 ## Discovery
 
-Before data can be sent and received, the App must discover the Server. See [discovery.md](./discovery.md) for details.
+Before data can be sent and received, the app must discover the server. See [discovery.md](./discovery.md) for details.
 
 ## Communication
 
-Once Discovery has completed, the App connects to the Server on Port TCP/27000. See [communication.md](./communication.md) for details.
+Once Discovery has completed, the app connects to the server on Port TCP/27000. See [communication.md](./communication.md) for details.
 
 ## Contributing
 
