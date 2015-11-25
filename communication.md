@@ -69,6 +69,115 @@ e.x.
 
 #### Type 3: Data Update
 
+Messages of type 3 update data on the Pipboy. Their bodies are lists of Entries. Each Entry takes the form below:
+
+> Need more here, and need to parse it out myself to see it
+
+```
+struct Entry {
+  uint8_t type;
+  uint32_t id;
+  switch (type) {
+    case 0:
+      uint8_t boolean;
+      break;
+    case 1:
+      sint8_t integer;
+      break;
+    case 2:
+      uint8_t integer;
+      break;
+    case 3:
+      sint32_t integer;
+      break;
+    case 4:
+      uint32_t integer;
+      break;
+    case 5:
+      float32_t floating_point;
+      break;
+    case 6:
+      char_t *string; // zero-terminated
+      break;
+    case 7: // list
+      uint16_t count;
+      uint32_t references[count];
+      break;
+    case 8:
+      uint16_t insert_count;
+      DictEntry[insert_count];
+      uint16_t remove_count;
+      uint32_t references[remove_count];
+      break;
+  }
+};
+
+struct DictEntry {
+      uint32_t reference;
+      char_t *name; // zero-terminated
+};
+```
+
+```
+var DATA_UPDATE_TYPES = { // length : details
+  0: 'BOOL', // 1: true if non zero
+  1: 'INT_8', // 1: signed
+  2: 'UINT_8', // 1: unsigned
+  3: 'INT_32', // 4: signed
+  4: 'UINT_32', // 4: unsigned
+  5: 'FLOAT', // 4: float
+  6: 'STRING', // n: null terminated, dynamic length
+  7: 'ARRAY', // 2: element count; then $n 4 byte nodeId
+  8: 'OBJECT', // 2: element count; then $n 4 byte nodeId with null terminated string following; then 2: removed element count; then $n 4 byte removed nodeId with null terminated string following
+};
+```
+
+Example Database
+
+Following JSON
+
+```JSON
+{ "foo" :
+  { "bar": "baz",
+    "list": [ "one", "two", 3 ]
+  }
+}
+```
+
+will result in this database
+
+| Index  |  Value |
+|---|---|
+| 0 | { "foo": 1 } |
+| 1 | { "bar": 2, "list": 3 } |
+| 2 | "baz" |
+| 3 | [ 4, 5, 6 ] |
+| 4 | "one" |
+| 5 | "two" |
+| 6 | 3 |
+
+
+   "Extents": {
+                "NEX": -2.228280315730175e-33,
+                "NEY": 4.203895392974451e-45,
+                "NWX": 7.030201665838976e+35,
+                "NWY": 5.605193857299268e-45,
+                "SWX": -1.7708112284338368e-37,
+                "SWY": 4.590513639281668e-41
+            },
+however the world map extents (bearing the same float32 data type) look quite reasonable given the already known structure of set-map-marker app-to-server packets:
+
+            "Extents": {
+                "NEX": 114688.0,
+                "NEY": 102400.0,
+                "NWX": -135168.0,
+                "NWY": 102400.0,
+                "SWX": -135168.0,
+                "SWY": -147456.0
+            },
+In any case hopefully this helps out in making a more proper decoder :-)
+
+
 #### Type 4: Local Map Update
 
 Messages of type 4 contain binary image data of the current local map if you view the local map in the app.
