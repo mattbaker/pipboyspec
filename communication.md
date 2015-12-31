@@ -69,6 +69,78 @@ e.x.
 
 #### Type 3: Data Update
 
+Messages of type 3 contain updates to the database.
+The database is a collection of values where each value is represented by an ID.
+
+A Data Update payload is a sequence of data updates. Each update begins with a header:
+
+```C
+struct UpdateHeader {
+  uint8_t type,
+  uint32_t id
+}
+```
+
+This is followed by data depending on the value type. The possible types are as follows:
+
+| Type ID | Type     | Format of update data                                                                    |
+| ------- | -------- | ---------------------------------------------------------------------------------------- |
+| 0       | BOOLEAN  | `uint8_t`, value is true if data is non-zero                                             |
+| 1       | INT8     | `int8_t`                                                                                 |
+| 2       | UINT8    | `uint8_t`                                                                                |
+| 3       | INT32    | `int32_t`                                                                                |
+| 4       | UINT32   | `uint32_t`                                                                               |
+| 5       | FLOAT    | `float32_t`                                                                              |
+| 6       | STRING   | `0x00`-termined byte string                                                              |
+| 7       | ARRAY    | `uint16_t length, uint32_t ids[length]`, ids are the value IDs of previously sent values |
+| 8       | OBJECT   | See below.                                                                               |
+
+Objects are complex. There are two parts - a set of (key, value) pairs to add, followed by a set of old values to remove.
+The first time an object is sent, the remove set will be empty.
+
+The first part, (key, value) pairs to add, begins with a `uint16_t length`,
+followed by `length` lots of (`uint32_t id`, `0x00`-terminated byte string `key`).
+This maps `key` to the previously sent value with ID `id`.
+
+The second part is `uint16_t length, uint32_t ids[length]`, where `ids` contains the IDs of values
+which the object currently maps to. Any (key, value) pair which maps to such a value should be removed.
+
+Note that it is possible to contain a removal and an addition for the same key in one update, for example
+if the update said to add the (key, value) pair ("foo", 1234) and remove the value which "foo" currently maps to.
+In this case, the new value replaces the old value.
+
+Objects are unordered and keys will not be repeated.
+
+e.x.
+
+        |               |      |           |            | bytes        |
+------- | ------------- | ---- | --------- | ---------- | ------------ |
+size    |               |      |           |            | 3b000000     |
+type    |               |      |           |            | 03           |
+content | first update  | type |           |            | 03           |
+        |               | id   |           |            | 0a000000     |
+        |               | data |           |            | 2a000000     |
+        | second update | type |           |            | 07           |
+        |               | id   |           |            | 0b000000     |
+        |               | data | length    |            | 0200         |
+        |               |      | first id  |            | 01000000     |
+        |               |      | second id |            | 02000000     |
+        | third update  | type |           |            | 08           |
+        |               | id   |           |            | 0c000000     |
+        |               | data | added     | length     | 0200         |
+        |               |      |           | first id   | 05000000     |
+        |               |      |           | first key  | 666f6f00     |
+        |               |      |           | second id  | 06000000     |
+        |               |      |           | second key | 68656c6c6f00 |
+        |               |      | removed   | length     | 0200         |
+        |               |      |           | first id   | 03000000     |
+        |               |      |           | second id  | 04000000     |
+
+corresponds to an update that:
+* sets value with id `10` to be a `uint32` equal to `42`
+* sets value with id `11` to be an array containing the values with ids `1, 2`
+* updates value with id `12`, an object, to add keys `"foo": 5, "hello": 6` and remove values `3, 4`
+
 #### Type 4: Local Map Update
 
 Messages of type 4 contain binary image data of the current local map if you view the local map in the app.
