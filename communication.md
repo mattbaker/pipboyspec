@@ -113,28 +113,28 @@ Objects are unordered and keys will not be repeated.
 
 e.x.
 
-        |               |      |           |            | bytes        |
-------- | ------------- | ---- | --------- | ---------- | ------------ |
-size    |               |      |           |            | 3b000000     |
-type    |               |      |           |            | 03           |
-content | first update  | type |           |            | 03           |
-        |               | id   |           |            | 0a000000     |
-        |               | data |           |            | 2a000000     |
-        | second update | type |           |            | 07           |
-        |               | id   |           |            | 0b000000     |
-        |               | data | length    |            | 0200         |
-        |               |      | first id  |            | 01000000     |
-        |               |      | second id |            | 02000000     |
-        | third update  | type |           |            | 08           |
-        |               | id   |           |            | 0c000000     |
-        |               | data | added     | length     | 0200         |
-        |               |      |           | first id   | 05000000     |
-        |               |      |           | first key  | 666f6f00     |
-        |               |      |           | second id  | 06000000     |
-        |               |      |           | second key | 68656c6c6f00 |
-        |               |      | removed   | length     | 0200         |
-        |               |      |           | first id   | 03000000     |
-        |               |      |           | second id  | 04000000     |
+|        |               |      |           |            | bytes        |
+|------- | ------------- | ---- | --------- | ---------- | ------------ |
+|size    |               |      |           |            | 3b000000     |
+|type    |               |      |           |            | 03           |
+|content | first update  | type |           |            | 03           |
+|        |               | id   |           |            | 0a000000     |
+|        |               | data |           |            | 2a000000     |
+|        | second update | type |           |            | 07           |
+|        |               | id   |           |            | 0b000000     |
+|        |               | data | length    |            | 0200         |
+|        |               |      | first id  |            | 01000000     |
+|        |               |      | second id |            | 02000000     |
+|        | third update  | type |           |            | 08           |
+|        |               | id   |           |            | 0c000000     |
+|        |               | data | added     | length     | 0200         |
+|        |               |      |           | first id   | 05000000     |
+|        |               |      |           | first key  | 666f6f00     |
+|        |               |      |           | second id  | 06000000     |
+|        |               |      |           | second key | 68656c6c6f00 |
+|        |               |      | removed   | length     | 0200         |
+|        |               |      |           | first id   | 03000000     |
+|        |               |      |           | second id  | 04000000     |
 
 corresponds to an update that:
 * sets value with id `10` to be a `uint32` equal to `42`
